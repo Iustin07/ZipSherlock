@@ -1,4 +1,4 @@
-import random
+import random,os
 import zipfile
 from hasher import Hasher
 
@@ -16,15 +16,28 @@ class Truncator:
 
     def TruncateArchive(self):
      with open(self.path, 'r+b') as z:
-        content=z.read()
+        z.read()
         x=z.tell()
         print(f"number of bytes from archieve is : {x}")
-        truncate_content=z.truncate(z.tell()-self.bytesToDelete)
+        z.truncate(z.tell()-self.bytesToDelete)
         z.seek(0)
         content=z.read()
         print(content)
         print(z.tell(),' ',x)
      return self.path
+
+    def TruncateWithoutSpecificFunction(self, bytesToDelete: int):
+        size = os.path.getsize(self.path)
+        print(size)
+        content = b''
+        with open(self.path, 'r+b') as z:
+            newsize = size - bytesToDelete
+            content = z.read(newsize)
+            print(content)
+            print(size, ' ', newsize)
+        with open(self.path, "w+b") as myarchive:
+            myarchive.write(content)
+        return self.path
     def GetFileHashFromArchive(self,typeOfHashing:str):
         """Function which takes a random file from archive and calculate hash for it"""
         try:
