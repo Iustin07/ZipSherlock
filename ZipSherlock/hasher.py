@@ -4,7 +4,7 @@ class Hasher:
     def __init__(self,method_of_hashing:str,content:bytes):
         self.hashingMethod=method_of_hashing
         self.content=content
-    def getData(self):
+    def printData(self):
         print(f'{self.hashingMethod}+{self.content}')
     def getHash(self):
         """method which will calculate hash of a file depending on desire hashing method"""

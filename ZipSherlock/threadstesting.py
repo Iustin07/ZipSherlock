@@ -1,29 +1,22 @@
 import threading
-import time
-import random
+from unzipper import Unzipper
+from monitor import Monitor
+from bytesGenerator import RandomGenLengBytes
 class myThreader(threading.Thread):
-   content="Static here"
+   #content="Static here"
+   unzipperObject=Unzipper()
+   all_posible=[]
    def __init__(self,threadId,threadName):
     threading.Thread.__init__(self)
     self.threadId=threadId
     self.threadName=threadName
+    self.numberOfBytesForRunnig=0
+
+   def SetNumberOfBytes(self,numberOfBytes):
+       self.numberOfBytesForRunnig=numberOfBytes
+   def GetNumberOfBytes(self):
+       return  self.numberOfBytesForRunnig
    def run(self):
-        print(f"thread with id {self.threadId}")
-        x=GetCombination(self.name)
-        print(x)
-        print(f"Thread stop {self.threadId}")
-def GetCombination(name):
-        hex_list = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']
-        first = random.choice(hex_list)
-        second = random.choice(hex_list)
-        print(first + second)
-        print(f"{name} choose {first+second}")
-        return first + second
-def createThreds():
-    threadslist=[]
-    for i in range(0,4):
-        threadslist.append(myThreader(i,f"Thread {i}"))
-    for threadi in threadslist:
-        threadi.start()
-        print(threadi.getName(),threadi.content)
-createThreds()
+        print(f"Thread {self.threadId} isworking")
+        myThreader.unzipperObject.workWithTempFiles(self.GetNumberOfBytes())
+        print(f"Thread {self.threadId} should stop")

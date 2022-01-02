@@ -1,62 +1,63 @@
 import binascii
-import collections
-import zipfile, io, gzip
-import zlib
-import os
-import hashlib,random,tempfile
-import io
+import zipfile
+import os,sys
+import hashlib,tempfile
+from hasher import Hasher
+from bytesGenerator import RandomGenLengBytes,GenerateMyStringBytes
+from openFile import FileOpener
+def function(path):
+    FileOpener(path).open()
 
 
-def function():
-    return 0
+def unzipArchieve(path:str):
+    print("ok")
+    to_find = getSha("D:\\python\\proiect\\files\\aplicatii_c_cpp_patrut.pdf")
+    try:
+    # # import subprocess
+    # # subprocess.getoutput('zip -FF ' + path)
+        z = zipfile.ZipFile(path)
+        print(z.namelist())
+    #    print(z.infolist()[0])
+    #     for i in z.infolist():
+    #         if i.filename == "Tournaments _ CodeSignal.pdf":
+    #             print('am gasit fisierul cautat')
+    #     #     f = z.open(i.filename)
+    #     #     content = f.read()
+    #     #     f = open('file.pdf', 'wb')
+    #     #     f.write(content)
+    #             print(i.filename, i.file_size)
+    #     z.close()
+        try:
+            result= {name: z.read(name) for name in z.namelist()}
+            print(len(result), result.keys())
+            keyssha=[getSha2(key,result[key]) for key in result]
+            print(keyssha)
+            if to_find in keyssha:
+                index=keyssha.index(to_find)
+            keys_list = list(result)
+            key = keys_list[index]
+            print("cheia este: ",key)
+            words_from_key=key.split()
+            full_path=path.split("\\")
+            new_path=""
+            for i in range(0, len(full_path)-1):
+              if i>0:
+                  new_path+="\\"+full_path[i]
+              else:
+                new_path+=full_path[i]
+            pathname = os.path.dirname(sys.argv[0])
+            print(new_path)
+            print(full_path)
+          #z.write(z.read(key),new_path)
+            z.extract(key,pathname)
+            return pathname+"//"+key
+        except:
+            print("error on reading")
+        #z.extractall()
+        z.close()
+    except zipfile.BadZipfile:
+        print("error zip is corrupt ")
 
-
-# def unzipArchieve(path:str):
-# print("ok")
-# to_find = getSha("D:\\python\\proiect\\files\\aplicatii_c_cpp_patrut.pdf")
-# try:
-#     # import subprocess
-#     # subprocess.getoutput('zip -FF ' + path)
-#     z = zipfile.ZipFile(path)
-#     print(z.infolist()[0])
-#     for i in z.infolist():
-#         if i.filename == "Tournaments _ CodeSignal.pdf":
-#              print('am gasit fisierul cautat')
-#         #     f = z.open(i.filename)
-#         #     content = f.read()
-#         #     f = open('file.pdf', 'wb')
-#         #     f.write(content)
-#         print(i.filename, i.file_size)
-#     z.close()
-# #     try:
-# #         result= {name: z.read(name) for name in z.namelist()}
-# #         print(len(result), result.keys())
-# #         keyssha=[getSha2(key,result[key]) for key in result]
-# #         if to_find in keyssha:
-# #           index=keyssha.index(to_find)
-# #           keys_list = list(result)
-# #           key = keys_list[index]
-# #           print("cheia este: ",key)
-# #           full_path=path.split("\\")
-# #           new_path=""
-# #           for i in range(0, len(full_path)-1):
-# #               if i>0:
-# #                   new_path+="\\"+full_path[i]
-# #               else:
-# #                 new_path+=full_path[i]
-# #           print(new_path)
-# #           print(full_path)
-# #           #z.write(z.read(key),new_path)
-# #           z.extract(key,new_path)
-# #         print(index)
-# #
-# #     except:
-# #         print("error on reading")
-# #         #z.extractall()
-# #     z.close()
-# except zipfile.BadZipfile:
-#     print("error")
-#
 
 
 #     z = zipfile.ZipFile(path)
@@ -144,12 +145,7 @@ def PrintInfo(path: str):
             print(i.filename, i.file_size)
     except zipfile.BadZipfile:
         print("error")
-def RandomGenLengBytes(length:int):
-    hex_list=['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f']
-    first=random.choice(hex_list)
-    second=random.choice(hex_list)
-    print(first+second)
-    return first+second
+
 
 def TryToOpen(path:str):
    opened=False
@@ -157,41 +153,72 @@ def TryToOpen(path:str):
     try:
         z = zipfile.ZipFile(path)
         content=ContentToHex(path)
-        print(content)
+        #print(content)
         opened=True
         for i in z.infolist():
             print(i.filename, i.file_size)
         z.close()
     except zipfile.BadZipFile:
         print("BadZip file")
-        PutContent(path,content,byter)
+        return 0
+        #PutContent(path,content,byter)
 
 def PutContent(path,content,byte:hex):
     content=content+byte
     return 0
 
-
-def workWithTempFiles(path:str):
-    content_original=b''
-    x=0
+def readContent(path:str):
+    content_original = b''
     with open(path, 'r+b') as z:
         content_original= z.read()
         x = z.tell()
         print(z.tell(), ' ', x)
+    return content_original
+def workWithTempFiles(path:str):
+    x=0
+    content_original=readContent(path)
     list_files=[]
-    print(content_original)
-    for i in range(0,4):
+    #print(content_original)
+    for i in range(0,1):
      temp = tempfile.TemporaryFile()
      list_files.append(temp)
+     k=2
     for file in list_files:
         print("another file")
         try:
-            random_byte=bytes.fromhex(RandomGenLengBytes(1))
+            if k==3:
+                random_byte=bytes.fromhex(GenerateMyStringBytes())
+            else:
+                random_byte=bytes.fromhex(RandomGenLengBytes(k))
+            print(random_byte.hex())
             file.write(content_original+random_byte)
             file.seek(0)
-            print(len(file.read()))
+            new_content=file.read()
+            hash_file=Hasher("sha1",new_content)
+            print(hash_file.getHash())
+            #print(len(file.read()))
             file.seek(0)
-            print(file.read(22222))
+            first_file_content=file.read(1609909)
+            hash_file1=Hasher("sha1",first_file_content)
+            print(hash_file1.getHash())
+            # f = open(f"myfile{k}.zip", "wb")
+            # f.write(new_content)
+            # f.close()
+            import os
+            import tempfile as tfile
+            fd, path = tfile.mkstemp(suffix=".zip", prefix=f"my{k}")  # can use anything
+            try:
+                print(path)
+                print(fd)
+                with os.fdopen(fd, 'wb') as tmpo:
+                    # do stuff with temp file
+                    tmpo.write(new_content)
+                #TryToOpen(path)
+                unzipArchieve(path)
+            finally:
+                os.remove(path)
+            k+=1
+           # unzipArchieve("myfile.zip")
         finally:
             file.close()
     return 0
@@ -209,12 +236,17 @@ def playing_around(path):
            print(bying)
            # z.write(content+bying)
            # z.truncate()
-workWithTempFiles("D:\\python\\proiect\\files2.zip")
+workWithTempFiles("D:\\python\\proiect\\multi2.zip")
+
 #playing_around("D:\\python\\proiect\\files2.zip")
 # PrintInfo("D:\\python\\proiect\\files2.zip")
 # unzipArchieve("D:\\python\\proiect\\files.zip")
 print("second")
-# print(print(getSha("D:\\python\\proiect\\aplicatii_c_cpp_patrut.pdf")))
+print(print(getSha("D:\\python\\proiect\\aplicatii_c_cpp_patrut.pdf")))
 # ContentToHex("D:\\python\\proiect\\signals.zip")
 #print(TruncateManually("D:\\python\\proiect\\files2.zip", 5))
 #TryToOpen("D:\\python\\proiect\\files.zip")
+mylst=[1,2,3,4,5,6,7,8,9]
+print(mylst[2])
+mylst.pop(2)
+print(mylst)

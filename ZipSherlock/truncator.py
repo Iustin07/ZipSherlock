@@ -15,18 +15,23 @@ class Truncator:
         return self.path,file_hash
 
     def TruncateArchive(self):
-     with open(self.path, 'r+b') as z:
-        z.read()
-        x=z.tell()
-        print(f"number of bytes from archieve is : {x}")
-        z.truncate(z.tell()-self.bytesToDelete)
-        z.seek(0)
-        content=z.read()
-        print(content)
-        print(z.tell(),' ',x)
+     """function which delete x bytes from the end of archieve"""
+     if self.bytesToDelete<=0:
+         print("you can't delete 0 or less tha 0 bytes")
+     else:
+        with open(self.path, 'r+b') as z:
+            z.read()
+            x=z.tell()
+            print(f"number of bytes from archieve is : {x}")
+            z.truncate(z.tell()-self.bytesToDelete)
+            z.seek(0)
+            content=z.read()
+            print(content)
+            print(z.tell(),' ',x)
      return self.path
 
     def TruncateWithoutSpecificFunction(self, bytesToDelete: int):
+        """function which truncate archive withou using truncate() explicity"""
         size = os.path.getsize(self.path)
         print(size)
         content = b''
