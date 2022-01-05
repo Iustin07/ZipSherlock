@@ -3,7 +3,7 @@ import zipfile
 import os,sys
 import hashlib,tempfile
 from hasher import Hasher
-from bytesGenerator import RandomGenLengBytes,GenerateMyStringBytes
+from bytesGenerator import RandomGenLengBytes
 from openFile import FileOpener
 def function(path):
     FileOpener(path).open()
@@ -13,8 +13,6 @@ def unzipArchieve(path:str):
     print("ok")
     to_find = getSha("D:\\python\\proiect\\files\\aplicatii_c_cpp_patrut.pdf")
     try:
-    # # import subprocess
-    # # subprocess.getoutput('zip -FF ' + path)
         z = zipfile.ZipFile(path)
         print(z.namelist())
     #    print(z.infolist()[0])
@@ -60,37 +58,6 @@ def unzipArchieve(path:str):
 
 
 
-#     z = zipfile.ZipFile(path)
-#     z.extractall()
-# try:
-# with open(path, 'rb') as compressed:
-#     data = compressed.read()
-#     file_no = 0
-#     while data:
-#         d = zlib.decompressobj(16+zlib.MAX_WBITS)
-#         with open('{}_decompressed.{}'.format(path, file_no), 'wb') as f:
-#             f.write(d.decompress(data,zlib.DEFLATED))
-#         data = d.unused_data
-#         file_no += 1
-#     zip_archive=gzip.GzipFile(path,"r")
-#     print(zip_archive.read())
-#     files=zip_archive.open('Tournaments _ CodeSignal')
-#     bytes_io = io.BytesIO(files.read())
-#     print(bytes_io)
-#     # with open("output.pdf", "wb") as f:
-#     #     f.write(bytes_io.getbuffer())
-#     # for item in zip_archive.filelist:
-#     #     print(item)
-#     # print(f'\nThere are {len(zip_archive.filelist)} ZipInfo objects present in archive')
-#
-# except zipfile.BadZipFile:
-#     print("w", "Unable to retrieve metadata from {fname}: archive is corrupt.".format(fname=path))
-
-
-# x=bytes(8)
-# print(x)
-# z.write(to_write)
-# z.close()
 
 
 
@@ -138,7 +105,9 @@ def calculateFrequencies(d: list):
 def PrintInfo(path: str):
     try:
         import subprocess
-        print(subprocess.getoutput('zip -FF ' + path + ' --out fixed2.zip'))
+        #print(subprocess.getoutput('zip -FF ' + path + ' --out fixed2.zip'))
+        pathname = os.path.dirname(sys.argv[0])
+        print(pathname+"\\"+"fixed2.zip")
         z = zipfile.ZipFile(path)
         print(z.infolist()[0])
         for i in z.infolist():
@@ -182,13 +151,11 @@ def workWithTempFiles(path:str):
     for i in range(0,1):
      temp = tempfile.TemporaryFile()
      list_files.append(temp)
-     k=2
+     k=5
     for file in list_files:
         print("another file")
         try:
-            if k==3:
-                random_byte=bytes.fromhex(GenerateMyStringBytes())
-            else:
+            if k==5:
                 random_byte=bytes.fromhex(RandomGenLengBytes(k))
             print(random_byte.hex())
             file.write(content_original+random_byte)
@@ -198,9 +165,9 @@ def workWithTempFiles(path:str):
             print(hash_file.getHash())
             #print(len(file.read()))
             file.seek(0)
-            first_file_content=file.read(1609909)
-            hash_file1=Hasher("sha1",first_file_content)
-            print(hash_file1.getHash())
+            #first_file_content=file.read(1609909)
+            #hash_file1=Hasher("sha1",first_file_content)
+            #print(hash_file1.getHash())
             # f = open(f"myfile{k}.zip", "wb")
             # f.write(new_content)
             # f.close()
@@ -213,11 +180,11 @@ def workWithTempFiles(path:str):
                 with os.fdopen(fd, 'wb') as tmpo:
                     # do stuff with temp file
                     tmpo.write(new_content)
-                #TryToOpen(path)
-                unzipArchieve(path)
+                PrintInfo(path)
+                TryToOpen(path)
+                #unzipArchieve(path)
             finally:
                 os.remove(path)
-            k+=1
            # unzipArchieve("myfile.zip")
         finally:
             file.close()
@@ -236,17 +203,16 @@ def playing_around(path):
            print(bying)
            # z.write(content+bying)
            # z.truncate()
-workWithTempFiles("D:\\python\\proiect\\multi2.zip")
-
+workWithTempFiles("D:\\python\\proiect\\morefiles5.zip")
 #playing_around("D:\\python\\proiect\\files2.zip")
-# PrintInfo("D:\\python\\proiect\\files2.zip")
+#PrintInfo("D:\\python\\proiect\\files2.zip")
 # unzipArchieve("D:\\python\\proiect\\files.zip")
 print("second")
 print(print(getSha("D:\\python\\proiect\\aplicatii_c_cpp_patrut.pdf")))
 # ContentToHex("D:\\python\\proiect\\signals.zip")
 #print(TruncateManually("D:\\python\\proiect\\files2.zip", 5))
 #TryToOpen("D:\\python\\proiect\\files.zip")
-mylst=[1,2,3,4,5,6,7,8,9]
-print(mylst[2])
-mylst.pop(2)
-print(mylst)
+# mylst=[1,2,3,4,5,6,7,8,9]
+# print(mylst[2])
+# mylst.pop(2)
+# print(mylst)

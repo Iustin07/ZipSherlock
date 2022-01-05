@@ -1,6 +1,4 @@
 import os
-
-
 class FileOpener:
     """class for which will open founded file"""
     def __init__(self,path:str):

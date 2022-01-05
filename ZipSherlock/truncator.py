@@ -6,7 +6,7 @@ class Truncator:
     """class from where create objects responsable with making data for input"""
     def __init__(self,path:str,numberOfBytes:int):
         self.path=path
-        self.bytesToDelete=numberOfBytes
+        self.bytes_to_delete=numberOfBytes
     def GenerateInputData(self,method_of_hashing:str):
         """Main function for generate truncate archive with missing x bytes.
         Will return a path for truncate archive and hash for choosen file"""
@@ -16,14 +16,14 @@ class Truncator:
 
     def TruncateArchive(self):
      """function which delete x bytes from the end of archieve"""
-     if self.bytesToDelete<=0:
+     if self.bytes_to_delete<=0:
          print("you can't delete 0 or less tha 0 bytes")
      else:
         with open(self.path, 'r+b') as z:
             z.read()
             x=z.tell()
             print(f"number of bytes from archieve is : {x}")
-            z.truncate(z.tell()-self.bytesToDelete)
+            z.truncate(z.tell()-self.bytes_to_delete)
             z.seek(0)
             content=z.read()
             print(content)
@@ -31,7 +31,7 @@ class Truncator:
      return self.path
 
     def TruncateWithoutSpecificFunction(self, bytesToDelete: int):
-        """function which truncate archive withou using truncate() explicity"""
+        """function which truncate archive without using truncate() explicity"""
         size = os.path.getsize(self.path)
         print(size)
         content = b''
