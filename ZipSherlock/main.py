@@ -1,12 +1,17 @@
-from truncator import Truncator
-import os,sys
-from threadstesting import myThreader
-from unzipper import Unzipper
-from colorama import Fore, Back, Style
-from openFile import FileOpener
+import os
+from zipper_package import Truncator
+from zipper_package import myThreader
+from zipper_package import Unzipper
+from  zipper_package import FileOpener
+from colorama import  Fore
+
 # Press the green button in the gutter to run the script.
 NUMBER_OF_THREADS = 4
 def createThreds(number_of_bytes:int):
+    """
+    Function which will create threads with the help of which will read the archive and read archive
+    :param number_of_bytes: indicates how many bytes a thread will use for repairing the archive
+    """
     threadslist=[]
     if number_of_bytes<3 or number_of_bytes>=6:
         th = myThreader(1, f"Thread{1}")
@@ -24,14 +29,8 @@ def createThreds(number_of_bytes:int):
             threadi.start()
         joinThreds(threds_list=threadslist)
         #threadslist.clear()
-def checkiffound():
-    return myThreader.unzipperObject.monitorObject.getPathOfFoundedFile()!=""
-def joinThreds(threds_list:list):
-    for th in threds_list:
-        th.join()
-def checkBytes():
-    return myThreader.unzipperObject.monitorObject.getNumberOfBytesFound()
-def solveBsedOnBytesNumber():
+def findNunberOfBytesForSolvingProblem():
+    """function called for find possible number of  bytes which will open the archive"""
     threadslist=[]
     for i in range(1,NUMBER_OF_THREADS+1):
         threadslist.append(myThreader(i, f"Thread {i}"))
@@ -54,18 +53,27 @@ def solveBsedOnBytesNumber():
                         threadslist.append(myThreader(i, f"Thread {i}"))
     number_of_bytes=min(myThreader.unzipperObject.monitorObject.getListOfPossibleBytes())
     return number_of_bytes
-
+def checkiffound():
+    return myThreader.unzipperObject.monitorObject.getPathOfFoundedFile()!=""
+def joinThreds(threds_list:list):
+    for th in threds_list:
+        th.join()
+def checkBytes():
+    return myThreader.unzipperObject.monitorObject.getNumberOfBytesFound()
 if __name__ == '__main__':
+    #Truncate option
      # tr=Truncator("D:\\python\\proiect\\files.zip",5)
-     # #tr.GetFileHashFromArchive("sha1")
+     # tr.GetFileHashFromArchive("sha1")
      # path,hasher=tr.GenerateInputData("sha1")
      # print(path,hasher)
+    ###
      #hash="c4529b8193aabed1c8d2cac33oadjfaoi4909"
      hash = "c4529b8193aabed1c8d2cac3302b8a7b46c2e04c"
-     path="D:\\python\\proiect\\morefiles6.zip"
+     path="D:\\python\\proiect\\morefiles.zip"
      myUnzipObject=Unzipper(path,hash)
      myThreader.unzipperObject=myUnzipObject
-     number_of_bytes_needed_for_opening_archive=solveBsedOnBytesNumber()
+
+     number_of_bytes_needed_for_opening_archive=findNunberOfBytesForSolvingProblem()
      print(Fore.BLUE+str(number_of_bytes_needed_for_opening_archive))
      print(Fore.WHITE+"")
      createThreds(number_of_bytes_needed_for_opening_archive)

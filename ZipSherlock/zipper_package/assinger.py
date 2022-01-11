@@ -1,4 +1,4 @@
-from bytesGenerator import getAllPosibbleCombinations
+from .bytesGenerator import getAllPosibbleCombinations
 class Assigner:
     """class which will handle with assigning of a possible byte combination for thread"""
     all_possible_values=[]

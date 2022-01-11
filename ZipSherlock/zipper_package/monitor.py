@@ -9,23 +9,30 @@ class Monitor():
         path_of_found_file->path of the file if it's found
     """
     list_of_numbers_ofBytes = []
+
     def __init__(self, numberOfBytesFound=0, canRead=False, pathOfFoundFile=""):
-        self.numbers_of_bytes_needed = numberOfBytesFound
-        self.can_read = canRead
+        """constructor"""
+        self.numbers_of_bytes_needed = numberOfBytesFound #indicate number of bytes neeed for opening the file
+        self.can_read = canRead # iz zip archive can be read or not
         self.path_of_foundFile = pathOfFoundFile
-        self.createdNewArchieve=""
+        self.createdNewArchieve = ""
+
     def getPathOfNewCreatedArchieve(self):
-        return  self.createdNewArchieve
-    def setCreatedArchivePath(self,path):
-        self.createdNewArchieve=path
-    def appendNumberOfBytes(self,numberBytes:int):
+        return self.createdNewArchieve
+
+    def setCreatedArchivePath(self, path):
+        self.createdNewArchieve = path
+
+    def appendNumberOfBytes(self, numberBytes: int):
         self.list_of_numbers_ofBytes.append(numberBytes)
+
     def getListOfPossibleBytes(self):
         return self.list_of_numbers_ofBytes
+
     def setNumberOfBytesNeed(self, numberOfBytes: int):
-        if self.numbers_of_bytes_needed == 0 and numberOfBytes!=0:
+        if self.numbers_of_bytes_needed == 0 and numberOfBytes != 0:
             self.numbers_of_bytes_needed = numberOfBytes
-        elif numberOfBytes<self.numbers_of_bytes_needed:
+        elif numberOfBytes < self.numbers_of_bytes_needed:
             self.numbers_of_bytes_needed
         else:
             pass

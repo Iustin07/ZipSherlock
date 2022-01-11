@@ -1,15 +1,20 @@
 import random,os
 import zipfile
-from hasher import Hasher
+from .hasher import Hasher
 
 class Truncator:
     """class from where create objects responsable with making data for input"""
     def __init__(self,path:str,numberOfBytes:int):
+        """Constructor
+        :param path: path of the archive
+        :param numberOfBytes: number of bytes wanted to be deleted from the end of archive
+        """
         self.path=path
         self.bytes_to_delete=numberOfBytes
     def GenerateInputData(self,method_of_hashing:str):
         """Main function for generate truncate archive with missing x bytes.
-        Will return a path for truncate archive and hash for choosen file"""
+        :param method_of_hashing: which method will be used for hashing the file
+        :return: a path for truncate archive and hash for choosen file as str both"""
         file_hash=self.GetFileHashFromArchive(method_of_hashing)
         self.TruncateArchive()
         return self.path,file_hash
@@ -26,7 +31,7 @@ class Truncator:
             z.truncate(z.tell()-self.bytes_to_delete)
             z.seek(0)
             content=z.read()
-            print(content)
+            #print(content)
             print(z.tell(),' ',x)
      return self.path
 
@@ -38,23 +43,26 @@ class Truncator:
         with open(self.path, 'r+b') as z:
             newsize = size - bytesToDelete
             content = z.read(newsize)
-            print(content)
+            #print(content)
             print(size, ' ', newsize)
         with open(self.path, "w+b") as myarchive:
             myarchive.write(content)
         return self.path
     def GetFileHashFromArchive(self,typeOfHashing:str):
-        """Function which takes a random file from archive and calculate hash for it"""
+        """Function which takes a random file from archive and calculate hash for it
+        :param typeOfHashing:method which is used for hashing the file
+        :return: string-representing hash of choosen file
+        """
         try:
             zipObject = zipfile.ZipFile(self.path)
-            listOfFiles=zipObject.infolist()
-            numberOfFilesInArchive=len(listOfFiles)
-            randomIndexOfaFile=random.randrange(numberOfFilesInArchive)
-            choosenFileName=listOfFiles[randomIndexOfaFile]
-            content=zipObject.read(choosenFileName.filename)
-            hasherObject=Hasher("sha1",content)
+            list_of_file_files=zipObject.infolist()
+            numberOfFilesInArchive=len(list_of_file_files)
+            random_index_of_afile=random.randrange(numberOfFilesInArchive)
+            choosen_file_name=list_of_file_files[random_index_of_afile]
+            content=zipObject.read(choosen_file_name.filename)
+            hasherObject=Hasher(typeOfHashing,content)
             #print(content)
-            # print(choosenFileName.filename)
+            # print(choosen_file_name.filename)
             # print(hasherObject.getHash())
             zipObject.close()
             return hasherObject.getHash()
